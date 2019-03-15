@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  ngrokd:
+    image: ngrokd:latest
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NGROK_DOMAIN: ${NGROK_DOMAIN}
+    ports:
+      - "4443:4443"
+      - "3389:3389"
+    command: >
+      -domain=${NGROK_DOMAIN}
+      -tlsCrt=assets/server/tls/snakeoil.crt
+      -tlsKey=assets/server/tls/snakeoil.key
+      -log-level=INFO

@@ -1,0 +1,54 @@
+* Ngrok Windows Remote Desktop
+
+ngrokd specialized for windows remote desktop.
+
+- You may need to check the code yourself to make sure the service is secure.
+- Never push the image your built to public repository.
+
+** Allow remote connections to your PC
+Go to *Control Panel* > *System and Security* > *System*, click *Remote settings*, then choose *Allow remote connections to this computer*
+
+
+** Set environment variable
+Make sure *your.ngrok.domain* is resolved to public ip address of your server.
+#+BEGIN_SRC shell
+export NGROK_DOMAIN=<your.ngrok.domain>
+#+END_SRC
+
+
+** Build ngrokd docker image
+#+BEGIN_SRC shell
+make build
+#+END_SRC
+
+
+** Bring up ngrokd service
+#+BEGIN_SRC shell
+docker-compose up -d
+#+END_SRC
+
+
+** Copy client from inside of the container
+#+BEGIN_SRC shell
+make client
+#+END_SRC
+
+** Copy ngrok.exe to your PC
+
+** Add ngrok client config file ngrok.yml
+#+BEGIN_SRC yaml
+server_addr: "<your.ngrok.domain>:4443"
+trust_host_root_certs: false
+tunnels:
+  mstsc:
+    remote_port: 3389
+    proto:
+      tcp: "127.0.0.1:3389"
+#+END_SRC
+
+** Start ngrok client
+#+BEGIN_SRC shell
+ngrok.exe -config=ngrok.yml start mstsc
+#+END_SRC
+
+** Cheers~
